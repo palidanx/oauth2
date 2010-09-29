@@ -7,7 +7,13 @@ module OAuth2
       @token = token
       @refresh_token = refresh_token
       @expires_in = (expires_in.nil? || expires_in == '') ? nil : expires_in.to_i
-      @expires_at = Time.now + @expires_in if @expires_in
+     #the following line is a bug.  If you add the current time + time it expires in, it results in a value bigger than time allows
+     # @expires_at = Time.now + @expires_in if @expires_in
+
+     #now the patched code says, if there is an expires_in time, set it to expires_at, otherwise use the current time
+     @expires_at = @expires_in ?  @expires_in : Time.now
+
+
     end
     
     # True if the token in question has an expiration time.
